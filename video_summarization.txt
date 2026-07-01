@@ -1,0 +1,443 @@
+mysql> CREATE DATABASE YouTubeSummarizationDB;
+Query OK, 1 row affected (0.07 sec)
+
+mysql> USE YouTubeSummarizationDB;
+Database changed
+mysql> CREATE TABLE User (
+    ->     user_id VARCHAR(5) PRIMARY KEY,
+    ->     user_name VARCHAR(50) NOT NULL,
+    ->     email VARCHAR(50) UNIQUE,
+    ->     password VARCHAR(30) NOT NULL
+    -> );
+Query OK, 0 rows affected (0.14 sec)
+
+mysql>
+mysql> INSERT INTO User
+    -> (user_id, user_name, email, password)
+    -> VALUES
+    -> ('U101','Sownya','sownya@gmail.com','sownya123'),
+    -> ('U102','Aarav','aarav@gmail.com','aarav123'),
+    -> ('U103','Vihaan','vihaan@gmail.com','vihaan123'),
+    -> ('U104','Ananya','ananya@gmail.com','ananya123'),
+    -> ('U105','Rahul','rahul@gmail.com','rahul123');
+Query OK, 5 rows affected (0.03 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql>
+mysql> CREATE TABLE Video (
+    ->     video_id VARCHAR(5) PRIMARY KEY,
+    ->     title VARCHAR(100) NOT NULL,
+    ->     youtube_url VARCHAR(255),
+    ->     duration TIME,
+    ->     upload_date DATE,
+    ->     user_id VARCHAR(5),
+    ->     FOREIGN KEY (user_id)
+    ->     REFERENCES User(user_id)
+    -> );
+Query OK, 0 rows affected (0.08 sec)
+
+mysql>
+mysql> INSERT INTO Video
+    -> (video_id,title,youtube_url,duration,upload_date,user_id)
+    -> VALUES
+    -> ('V101','Python Basics Tutorial','https://youtu.be/py101','00:20:15','2025-07-01','U101'),
+    -> ('V102','Machine Learning Intro','https://youtu.be/ml102','00:35:40','2025-07-02','U102'),
+    -> ('V103','DBMS Complete Course','https://youtu.be/db103','00:42:10','2025-07-03','U103'),
+    -> ('V104','SQL Joins Explained','https://youtu.be/sql104','00:18:30','2025-07-04','U101'),
+    -> ('V105','NLP Tutorial','https://youtu.be/nlp105','00:28:45','2025-07-05','U104');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+     -
+
+mysql> CREATE TABLE Transcript (
+    ->     transcript_id VARCHAR(5) PRIMARY KEY,
+    ->     video_id VARCHAR(5),
+    ->     transcript_text TEXT,
+    ->     language VARCHAR(20),
+    ->     word_count INT,
+    ->     FOREIGN KEY (video_id)
+    ->     REFERENCES Video(video_id)
+    -> );
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> INSERT INTO Transcript
+    -> (transcript_id,video_id,transcript_text,language,word_count)
+    -> VALUES
+    -> ('T101','V101','Python basics transcript...','English',2800),
+    -> ('T102','V102','Machine learning transcript...','English',4600),
+    -> ('T103','V103','DBMS transcript...','English',5800),
+    -> ('T104','V104','SQL joins transcript...','English',2500),
+    -> ('T105','V105','NLP transcript...','English',3900);
+Query OK, 5 rows affected (0.05 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE Summary (
+    ->     summary_id VARCHAR(5) PRIMARY KEY,
+    ->     transcript_id VARCHAR(5),
+    ->     summary_text TEXT,
+    ->     summary_length VARCHAR(20),
+    ->     generated_date DATE,
+    ->     FOREIGN KEY (transcript_id)
+    ->     REFERENCES Transcript(transcript_id)
+    -> );
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> INSERT INTO Summary
+    -> (summary_id,transcript_id,summary_text,summary_length,generated_date)
+    -> VALUES
+    -> ('S101','T101','Python basics summary...','Short','2025-07-01'),
+    -> ('S102','T102','Machine learning summary...','Medium','2025-07-02'),
+    -> ('S103','T103','DBMS summary...','Long','2025-07-03'),
+    -> ('S104','T104','SQL joins summary...','Short','2025-07-04'),
+    -> ('S105','T105','NLP summary...','Medium','2025-07-05');
+Query OK, 5 rows affected (0.05 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE NLP_Model (
+    ->     model_id VARCHAR(5) PRIMARY KEY,
+    ->     model_name VARCHAR(30),
+    ->     version VARCHAR(10),
+    ->     accuracy DECIMAL(5,2)
+    -> );
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> INSERT INTO NLP_Model
+    -> (model_id,model_name,version,accuracy)
+    -> VALUES
+    -> ('M101','BART','1.0',94.50),
+    -> ('M102','T5','2.0',92.80),
+    -> ('M103','Pegasus','1.5',95.60);
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE Summary_History (
+    ->     history_id VARCHAR(5) PRIMARY KEY,
+    ->     summary_id VARCHAR(5),
+    ->     model_id VARCHAR(5),
+    ->     generated_time DATETIME,
+    ->     FOREIGN KEY (summary_id)
+    ->     REFERENCES Summary(summary_id),
+    ->     FOREIGN KEY (model_id)
+    ->     REFERENCES NLP_Model(model_id)
+    -> );
+Query OK, 0 rows affected (0.14 sec)
+
+mysql> INSERT INTO Summary_History
+    -> (history_id,summary_id,model_id,generated_time)
+    -> VALUES
+    -> ('H101','S101','M101','2025-07-01 10:30:00'),
+    -> ('H102','S102','M102','2025-07-02 11:00:00'),
+    -> ('H103','S103','M103','2025-07-03 02:15:00'),
+    -> ('H104','S104','M101','2025-07-04 09:45:00'),
+    -> ('H105','S105','M103','2025-07-05 03:20:00');
+Query OK, 5 rows affected (0.05 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select*from summary_history;
++------------+------------+----------+---------------------+
+| history_id | summary_id | model_id | generated_time      |
++------------+------------+----------+---------------------+
+| H101       | S101       | M101     | 2025-07-01 10:30:00 |
+| H102       | S102       | M102     | 2025-07-02 11:00:00 |
+| H103       | S103       | M103     | 2025-07-03 02:15:00 |
+| H104       | S104       | M101     | 2025-07-04 09:45:00 |
+| H105       | S105       | M103     | 2025-07-05 03:20:00 |
++------------+------------+----------+---------------------+
+5 rows in set (0.04 sec)
+
+mysql> select*from user;
++---------+-----------+------------------+-----------+
+| user_id | user_name | email            | password  |
++---------+-----------+------------------+-----------+
+| U101    | Sownya    | sownya@gmail.com | sownya123 |
+| U102    | Aarav     | aarav@gmail.com  | aarav123  |
+| U103    | Vihaan    | vihaan@gmail.com | vihaan123 |
+| U104    | Ananya    | ananya@gmail.com | ananya123 |
+| U105    | Rahul     | rahul@gmail.com  | rahul123  |
++---------+-----------+------------------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> select*from video;
++----------+------------------------+-------------------------+----------+-------------+---------+
+| video_id | title                  | youtube_url             | duration | upload_date | user_id |
++----------+------------------------+-------------------------+----------+-------------+---------+
+| V101     | Python Basics Tutorial | https://youtu.be/py101  | 00:20:15 | 2025-07-01  | U101    |
+| V102     | Machine Learning Intro | https://youtu.be/ml102  | 00:35:40 | 2025-07-02  | U102    |
+| V103     | DBMS Complete Course   | https://youtu.be/db103  | 00:42:10 | 2025-07-03  | U103    |
+| V104     | SQL Joins Explained    | https://youtu.be/sql104 | 00:18:30 | 2025-07-04  | U101    |
+| V105     | NLP Tutorial           | https://youtu.be/nlp105 | 00:28:45 | 2025-07-05  | U104    |
++----------+------------------------+-------------------------+----------+-------------+---------+
+5 rows in set (0.04 sec)
+
+mysql> select*from transcript;
++---------------+----------+--------------------------------+----------+------------+
+| transcript_id | video_id | transcript_text                | language | word_count |
++---------------+----------+--------------------------------+----------+------------+
+| T101          | V101     | Python basics transcript...    | English  |       2800 |
+| T102          | V102     | Machine learning transcript... | English  |       4600 |
+| T103          | V103     | DBMS transcript...             | English  |       5800 |
+| T104          | V104     | SQL joins transcript...        | English  |       2500 |
+| T105          | V105     | NLP transcript...              | English  |       3900 |
++---------------+----------+--------------------------------+----------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select*from summary;
++------------+---------------+-----------------------------+----------------+----------------+
+| summary_id | transcript_id | summary_text                | summary_length | generated_date |
++------------+---------------+-----------------------------+----------------+----------------+
+| S101       | T101          | Python basics summary...    | Short          | 2025-07-01     |
+| S102       | T102          | Machine learning summary... | Medium         | 2025-07-02     |
+| S103       | T103          | DBMS summary...             | Long           | 2025-07-03     |
+| S104       | T104          | SQL joins summary...        | Short          | 2025-07-04     |
+| S105       | T105          | NLP summary...              | Medium         | 2025-07-05     |
++------------+---------------+-----------------------------+----------------+----------------+
+5 rows in set (0.00 sec)
+
+mysql> select*from nlp_model;
++----------+------------+---------+----------+
+| model_id | model_name | version | accuracy |
++----------+------------+---------+----------+
+| M101     | BART       | 1.0     |    94.50 |
+| M102     | T5         | 2.0     |    92.80 |
+| M103     | Pegasus    | 1.5     |    95.60 |
++----------+------------+---------+----------+
+3 rows in set (0.04 sec)
+
+mysql> show tables;
++----------------------------------+
+| Tables_in_youtubesummarizationdb |
++----------------------------------+
+| nlp_model                        |
+| summary                          |
+| summary_history                  |
+| transcript                       |
+| user                             |
+| video                            |
++----------------------------------+
+6 rows in set (0.05 sec)
+
+mysql> -- LEVEL 1:BEGINNER
+mysql> -- 1.Display all uploaded videos.
+mysql> SELECT * FROM Video;
++----------+------------------------+-------------------------+----------+-------------+---------+
+| video_id | title                  | youtube_url             | duration | upload_date | user_id |
++----------+------------------------+-------------------------+----------+-------------+---------+
+| V101     | Python Basics Tutorial | https://youtu.be/py101  | 00:20:15 | 2025-07-01  | U101    |
+| V102     | Machine Learning Intro | https://youtu.be/ml102  | 00:35:40 | 2025-07-02  | U102    |
+| V103     | DBMS Complete Course   | https://youtu.be/db103  | 00:42:10 | 2025-07-03  | U103    |
+| V104     | SQL Joins Explained    | https://youtu.be/sql104 | 00:18:30 | 2025-07-04  | U101    |
+| V105     | NLP Tutorial           | https://youtu.be/nlp105 | 00:28:45 | 2025-07-05  | U104    |
++----------+------------------------+-------------------------+----------+-------------+---------+
+5 rows in set (0.00 sec)
+
+mysql> -- 2Find the email address of user 'Sownya'.
+mysql> SELECT email
+    -> FROM User
+    -> WHERE user_name='Sownya';
++------------------+
+| email            |
++------------------+
+| sownya@gmail.com |
++------------------+
+1 row in set (0.00 sec)
+
+mysql> -- 3.Display all videos uploaded by User U101.
+mysql> SELECT title
+    -> FROM Video
+    -> WHERE user_id='U101';
++------------------------+
+| title                  |
++------------------------+
+| Python Basics Tutorial |
+| SQL Joins Explained    |
++------------------------+
+2 rows in set (0.00 sec)
+
+mysql> -- 4. List all NLP models alphabetically.
+mysql> SELECT model_name
+    -> FROM NLP_Model
+    -> ORDER BY model_name;
++------------+
+| model_name |
++------------+
+| BART       |
+| Pegasus    |
+| T5         |
++------------+
+3 rows in set (0.00 sec)
+
+mysql> -- 5. Count the total number of uploaded videos.
+mysql> SELECT COUNT(*) AS Total_Videos
+    -> FROM Video;
++--------------+
+| Total_Videos |
++--------------+
+|            5 |
++--------------+
+1 row in set (0.00 sec)
+
+mysql> -- 6. Display transcripts having more than 3000 word
+mysql> SELECT transcript_id, word_count
+    -> FROM Transcript
+    -> WHERE word_count > 3000;
++---------------+------------+
+| transcript_id | word_count |
++---------------+------------+
+| T102          |       4600 |
+| T103          |       5800 |
+| T105          |       3900 |
++---------------+------------+
+3 rows in set (0.00 sec)
+
+mysql> -- LEVEL 2:INTERMEDIATE
+mysql> -- 1. Display video titles along with uploader names.
+mysql> SELECT v.title,
+    ->        u.user_name
+    -> FROM Video v
+    -> JOIN User u
+    -> ON v.user_id=u.user_id;
++------------------------+-----------+
+| title                  | user_name |
++------------------------+-----------+
+| Python Basics Tutorial | Sownya    |
+| Machine Learning Intro | Aarav     |
+| DBMS Complete Course   | Vihaan    |
+| SQL Joins Explained    | Sownya    |
+| NLP Tutorial           | Ananya    |
++------------------------+-----------+
+5 rows in set (0.04 sec)
+
+mysql> -- 2. Display video titles with transcript word count.
+mysql> SELECT v.title,
+    ->        t.word_count
+    -> FROM Video v
+    -> JOIN Transcript t
+    -> ON v.video_id=t.video_id;
++------------------------+------------+
+| title                  | word_count |
++------------------------+------------+
+| Python Basics Tutorial |       2800 |
+| Machine Learning Intro |       4600 |
+| DBMS Complete Course   |       5800 |
+| SQL Joins Explained    |       2500 |
+| NLP Tutorial           |       3900 |
++------------------------+------------+
+5 rows in set (0.00 sec)
+
+mysql> -- 3. Count videos uploaded by each user.
+mysql> SELECT u.user_name,
+    ->        COUNT(v.video_id) AS Total_Videos
+    -> FROM User u
+    -> JOIN Video v
+    -> ON u.user_id=v.user_id
+    -> GROUP BY u.user_name;
++-----------+--------------+
+| user_name | Total_Videos |
++-----------+--------------+
+| Sownya    |            2 |
+| Aarav     |            1 |
+| Vihaan    |            1 |
+| Ananya    |            1 |
++-----------+--------------+
+4 rows in set (0.04 sec)
+
+mysql> -- . Display each summary with the NLP model used.
+mysql> SELECT s.summary_id,
+    ->        n.model_name
+    -> FROM Summary s
+    -> JOIN Summary_History sh
+    -> ON s.summary_id=sh.summary_id
+    -> JOIN NLP_Model n
+    -> ON sh.model_id=n.model_id;
++------------+------------+
+| summary_id | model_name |
++------------+------------+
+| S101       | BART       |
+| S104       | BART       |
+| S102       | T5         |
+| S103       | Pegasus    |
+| S105       | Pegasus    |
++------------+------------+
+5 rows in set (0.00 sec)
+
+mysql> -- 5. Find the average transcript word count.
+mysql> SELECT AVG(word_count) AS Average_Words
+    -> FROM Transcript;
++---------------+
+| Average_Words |
++---------------+
+|     3920.0000 |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> -- 6. Display users and their uploaded videos sorted by upload date.
+mysql> SELECT u.user_name,
+    ->        v.title,
+    ->        v.upload_date
+    -> FROM User u
+    -> JOIN Video v
+    -> ON u.user_id=v.user_id
+    -> ORDER BY v.upload_date;
++-----------+------------------------+-------------+
+| user_name | title                  | upload_date |
++-----------+------------------------+-------------+
+| Sownya    | Python Basics Tutorial | 2025-07-01  |
+| Aarav     | Machine Learning Intro | 2025-07-02  |
+| Vihaan    | DBMS Complete Course   | 2025-07-03  |
+| Sownya    | SQL Joins Explained    | 2025-07-04  |
+| Ananya    | NLP Tutorial           | 2025-07-05  |
++-----------+------------------------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> -- LEVEL 3:ADVANCED
+mysql> -- 1. Find users who uploaded more than one video.
+mysql> SELECT u.user_name,
+    ->        COUNT(v.video_id) AS Total_Videos
+    -> FROM User u
+    -> JOIN Video v
+    -> ON u.user_id=v.user_id
+    -> GROUP BY u.user_name
+    -> HAVING COUNT(v.video_id) > 1;
++-----------+--------------+
+| user_name | Total_Videos |
++-----------+--------------+
+| Sownya    |            2 |
++-----------+--------------+
+1 row in set (0.00 sec)
+
+mysql> -- 2. Display videos whose transcript word count is greater than the average transcript word count.
+mysql> SELECT v.title,
+    ->        t.word_count
+    -> FROM Video v
+    -> JOIN Transcript t
+    -> ON v.video_id=t.video_id
+    -> WHERE t.word_count >
+    -> (
+    -> SELECT AVG(word_count)
+    -> FROM Transcript
+    -> );
++------------------------+------------+
+| title                  | word_count |
++------------------------+------------+
+| Machine Learning Intro |       4600 |
+| DBMS Complete Course   |       5800 |
++------------------------+------------+
+2 rows in set (0.04 sec)
+
+mysql> -- 3. Find the NLP model used most frequently.
+mysql> SELECT n.model_name,
+    ->        COUNT(sh.model_id) AS Usage_Count
+    -> FROM NLP_Model n
+    -> JOIN Summary_History sh
+    -> ON n.model_id=sh.model_id
+    -> GROUP BY n.model_name
+    -> ORDER BY Usage_Count DESC
+    -> LIMIT 1;
++------------+-------------+
+| model_name | Usage_Count |
++------------+-------------+
+| BART       |           2 |
++------------+-------------+
+1 row in set (0.00 sec)
+
+mysql>
