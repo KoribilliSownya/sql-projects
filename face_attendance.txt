@@ -1,0 +1,445 @@
+mysql> CREATE DATABASE FaceAttendanceDB;
+Query OK, 1 row affected (0.05 sec)
+
+mysql> USE FaceAttendanceDB;
+Database changed
+mysql> CREATE TABLE Department (
+    ->     department_id VARCHAR(5) PRIMARY KEY,
+    ->     department_name VARCHAR(50) NOT NULL
+    -> );
+Query OK, 0 rows affected (0.17 sec)
+
+mysql> INSERT INTO Department (department_id, department_name)
+    -> VALUES
+    -> ('D101', 'Computer Science and Engineering'),
+    -> ('D102', 'Electronics and Communication Engineering'),
+    -> ('D103', 'Artificial Intelligence and Machine Learning'),
+    -> ('D104', 'Information Technology');
+Query OK, 4 rows affected (0.03 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE Student (
+    ->     student_id VARCHAR(5) PRIMARY KEY,
+    ->     student_name VARCHAR(50) NOT NULL,
+    ->     email VARCHAR(50) UNIQUE,
+    ->     department_id VARCHAR(5),
+    ->     FOREIGN KEY (department_id) REFERENCES Department(department_id)
+    -> );
+Query OK, 0 rows affected (0.12 sec)
+
+mysql> INSERT INTO Student
+    -> (student_id, student_name, email, department_id)
+    -> VALUES
+    -> ('S101','Sownya','sownya@gmail.com','D101'),
+    -> ('S102','Aarav','aarav@gmail.com','D101'),
+    -> ('S103','Vihaan','vihaan@gmail.com','D103'),
+    -> ('S104','Ananya','ananya@gmail.com','D102'),
+    -> ('S105','Rahul','rahul@gmail.com','D104'),
+    -> ('S106','Sneha','sneha@gmail.com','D103'),
+    -> ('S107','Kiran','kiran@gmail.com','D101'),
+    -> ('S108','Priya','priya@gmail.com','D102');
+Query OK, 8 rows affected (0.06 sec)
+Records: 8  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE Faculty (
+    ->     faculty_id VARCHAR(5) PRIMARY KEY,
+    ->     faculty_name VARCHAR(50) NOT NULL,
+    ->     department_id VARCHAR(5),
+    ->     FOREIGN KEY (department_id) REFERENCES Department(department_id)
+    -> );
+Query OK, 0 rows affected (0.11 sec)
+
+mysql> INSERT INTO Faculty
+    -> (faculty_id, faculty_name, department_id)
+    -> VALUES
+    -> ('F101','Ravi Kumar','D101'),
+    -> ('F102','Meena','D102'),
+    -> ('F103','Suresh','D103'),
+    -> ('F104','Kavitha','D104');
+Query OK, 4 rows affected (0.05 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE Course (
+    ->     course_id VARCHAR(5) PRIMARY KEY,
+    ->     course_name VARCHAR(50) NOT NULL,
+    ->     faculty_id VARCHAR(5),
+    ->     FOREIGN KEY (faculty_id) REFERENCES Faculty(faculty_id)
+    -> );
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> INSERT INTO Course
+    -> (course_id, course_name, faculty_id)
+    -> VALUES
+    -> ('C101','Database Management System','F101'),
+    -> ('C102','Python Programming','F101'),
+    -> ('C103','Artificial Intelligence','F103'),
+    -> ('C104','Computer Networks','F102'),
+    -> ('C105','Cloud Computing','F104');
+Query OK, 5 rows affected (0.06 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE Classroom (
+    ->     classroom_id VARCHAR(5) PRIMARY KEY,
+    ->     room_no VARCHAR(10),
+    ->     floor INT
+    -> );
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> INSERT INTO Classroom
+    -> (classroom_id, room_no, floor)
+    -> VALUES
+    -> ('CR101','A101',1),
+    -> ('CR102','A102',1),
+    -> ('CR103','B201',2),
+    -> ('CR104','B202',2);
+Query OK, 4 rows affected (0.05 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE Attendance (
+    ->     attendance_id VARCHAR(5) PRIMARY KEY,
+    ->     student_id VARCHAR(5),
+    ->     course_id VARCHAR(5),
+    ->     faculty_id VARCHAR(5),
+    ->     classroom_id VARCHAR(5),
+    ->     attendance_date DATE,
+    ->     status VARCHAR(10),
+    -> 
+    ->     FOREIGN KEY (student_id) REFERENCES Student(student_id),
+    ->     FOREIGN KEY (course_id) REFERENCES Course(course_id),
+    ->     FOREIGN KEY (faculty_id) REFERENCES Faculty(faculty_id),
+    ->     FOREIGN KEY (classroom_id) REFERENCES Classroom(classroom_id)
+    -> );
+Query OK, 0 rows affected (0.13 sec)
+
+mysql> INSERT INTO Attendance
+    -> (attendance_id, student_id, course_id, faculty_id, classroom_id, attendance_date, status)
+    -> VALUES
+    -> ('A101','S101','C101','F101','CR101','2025-07-01','Present'),
+    -> ('A102','S102','C101','F101','CR101','2025-07-01','Present'),
+    -> ('A103','S103','C103','F103','CR103','2025-07-01','Absent'),
+    -> ('A104','S104','C104','F102','CR102','2025-07-01','Present'),
+    -> ('A105','S105','C105','F104','CR104','2025-07-01','Present'),
+    -> ('A106','S106','C103','F103','CR103','2025-07-01','Present'),
+    -> ('A107','S107','C102','F101','CR101','2025-07-01','Absent'),
+    -> ('A108','S108','C104','F102','CR102','2025-07-01','Present'),
+    -> ('A109','S101','C102','F101','CR101','2025-07-02','Present'),
+    -> ('A110','S102','C102','F101','CR101','2025-07-02','Absent');
+Query OK, 10 rows affected (0.05 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> select*from department;
++---------------+----------------------------------------------+
+| department_id | department_name                              |
++---------------+----------------------------------------------+
+| D101          | Computer Science and Engineering             |
+| D102          | Electronics and Communication Engineering    |
+| D103          | Artificial Intelligence and Machine Learning |
+| D104          | Information Technology                       |
++---------------+----------------------------------------------+
+4 rows in set (0.00 sec)
+
+mysql> select*from student;
++------------+--------------+------------------+---------------+
+| student_id | student_name | email            | department_id |
++------------+--------------+------------------+---------------+
+| S101       | Sownya       | sownya@gmail.com | D101          |
+| S102       | Aarav        | aarav@gmail.com  | D101          |
+| S103       | Vihaan       | vihaan@gmail.com | D103          |
+| S104       | Ananya       | ananya@gmail.com | D102          |
+| S105       | Rahul        | rahul@gmail.com  | D104          |
+| S106       | Sneha        | sneha@gmail.com  | D103          |
+| S107       | Kiran        | kiran@gmail.com  | D101          |
+| S108       | Priya        | priya@gmail.com  | D102          |
++------------+--------------+------------------+---------------+
+8 rows in set (0.00 sec)
+
+mysql> select*from faculty;
++------------+--------------+---------------+
+| faculty_id | faculty_name | department_id |
++------------+--------------+---------------+
+| F101       | Ravi Kumar   | D101          |
+| F102       | Meena        | D102          |
+| F103       | Suresh       | D103          |
+| F104       | Kavitha      | D104          |
++------------+--------------+---------------+
+4 rows in set (0.00 sec)
+
+mysql> select*from course;
++-----------+----------------------------+------------+
+| course_id | course_name                | faculty_id |
++-----------+----------------------------+------------+
+| C101      | Database Management System | F101       |
+| C102      | Python Programming         | F101       |
+| C103      | Artificial Intelligence    | F103       |
+| C104      | Computer Networks          | F102       |
+| C105      | Cloud Computing            | F104       |
++-----------+----------------------------+------------+
+5 rows in set (0.04 sec)
+
+mysql> select*from classroom;
++--------------+---------+-------+
+| classroom_id | room_no | floor |
++--------------+---------+-------+
+| CR101        | A101    |     1 |
+| CR102        | A102    |     1 |
+| CR103        | B201    |     2 |
+| CR104        | B202    |     2 |
++--------------+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> select *from attendance;
++---------------+------------+-----------+------------+--------------+-----------------+---------+
+| attendance_id | student_id | course_id | faculty_id | classroom_id | attendance_date | status  |
++---------------+------------+-----------+------------+--------------+-----------------+---------+
+| A101          | S101       | C101      | F101       | CR101        | 2025-07-01      | Present |
+| A102          | S102       | C101      | F101       | CR101        | 2025-07-01      | Present |
+| A103          | S103       | C103      | F103       | CR103        | 2025-07-01      | Absent  |
+| A104          | S104       | C104      | F102       | CR102        | 2025-07-01      | Present |
+| A105          | S105       | C105      | F104       | CR104        | 2025-07-01      | Present |
+| A106          | S106       | C103      | F103       | CR103        | 2025-07-01      | Present |
+| A107          | S107       | C102      | F101       | CR101        | 2025-07-01      | Absent  |
+| A108          | S108       | C104      | F102       | CR102        | 2025-07-01      | Present |
+| A109          | S101       | C102      | F101       | CR101        | 2025-07-02      | Present |
+| A110          | S102       | C102      | F101       | CR101        | 2025-07-02      | Absent  |
++---------------+------------+-----------+------------+--------------+-----------------+---------+
+10 rows in set (0.00 sec)
+
+mysql> -- LEVEL 1:BEGINNER
+mysql> 1. Display all students from the CSE department.
+    -> ^C
+mysql> SELECT *
+    -> FROM Student
+    -> WHERE department_id = 'D101';
++------------+--------------+------------------+---------------+
+| student_id | student_name | email            | department_id |
++------------+--------------+------------------+---------------+
+| S101       | Sownya       | sownya@gmail.com | D101          |
+| S102       | Aarav        | aarav@gmail.com  | D101          |
+| S107       | Kiran        | kiran@gmail.com  | D101          |
++------------+--------------+------------------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> -- 2 Find the email address of Sownya.
+mysql> SELECT email
+    -> FROM Student
+    -> WHERE student_name = 'Sownya';
++------------------+
+| email            |
++------------------+
+| sownya@gmail.com |
++------------------+
+1 row in set (0.00 sec)
+
+mysql> -- 3. Show all students whose attendance status is Present.
+mysql> SELECT s.student_name, a.status
+    -> FROM Student s
+    -> JOIN Attendance a
+    -> ON s.student_id = a.student_id
+    -> WHERE a.status = 'Present';
++--------------+---------+
+| student_name | status  |
++--------------+---------+
+| Sownya       | Present |
+| Aarav        | Present |
+| Ananya       | Present |
+| Rahul        | Present |
+| Sneha        | Present |
+| Priya        | Present |
+| Sownya       | Present |
++--------------+---------+
+7 rows in set (0.00 sec)
+
+mysql> -- 4. List all faculty names alphabetically.
+mysql> SELECT faculty_name
+    -> FROM Faculty
+    -> ORDER BY faculty_name ASC;
++--------------+
+| faculty_name |
++--------------+
+| Kavitha      |
+| Meena        |
+| Ravi Kumar   |
+| Suresh       |
++--------------+
+4 rows in set (0.00 sec)
+
+mysql> -- 5. Count how many students belong to the AIML department.
+mysql> SELECT COUNT(*) AS Total_Students
+    -> FROM Student
+    -> WHERE department_id = 'D103';
++----------------+
+| Total_Students |
++----------------+
+|              2 |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> -- Level 2 (Intermediate)
+mysql> 1. Display student names with their department names.
+    -> ^C
+mysql> SELECT s.student_name, d.department_name
+    -> FROM Student s
+    -> INNER JOIN Department d
+    -> ON s.department_id = d.department_id;
++--------------+----------------------------------------------+
+| student_name | department_name                              |
++--------------+----------------------------------------------+
+| Sownya       | Computer Science and Engineering             |
+| Aarav        | Computer Science and Engineering             |
+| Kiran        | Computer Science and Engineering             |
+| Ananya       | Electronics and Communication Engineering    |
+| Priya        | Electronics and Communication Engineering    |
+| Vihaan       | Artificial Intelligence and Machine Learning |
+| Sneha        | Artificial Intelligence and Machine Learning |
+| Rahul        | Information Technology                       |
++--------------+----------------------------------------------+
+8 rows in set (0.00 sec)
+
+mysql> -- 2. Show attendance along with student names and course names.
+mysql> SELECT s.student_name,
+    ->        c.course_name,
+    ->        a.attendance_date,
+    ->        a.status
+    -> FROM Attendance a
+    -> INNER JOIN Student s
+    -> ON a.student_id = s.student_id
+    -> INNER JOIN Course c
+    -> ON a.course_id = c.course_id;
++--------------+----------------------------+-----------------+---------+
+| student_name | course_name                | attendance_date | status  |
++--------------+----------------------------+-----------------+---------+
+| Sownya       | Database Management System | 2025-07-01      | Present |
+| Aarav        | Database Management System | 2025-07-01      | Present |
+| Kiran        | Python Programming         | 2025-07-01      | Absent  |
+| Sownya       | Python Programming         | 2025-07-02      | Present |
+| Aarav        | Python Programming         | 2025-07-02      | Absent  |
+| Vihaan       | Artificial Intelligence    | 2025-07-01      | Absent  |
+| Sneha        | Artificial Intelligence    | 2025-07-01      | Present |
+| Ananya       | Computer Networks          | 2025-07-01      | Present |
+| Priya        | Computer Networks          | 2025-07-01      | Present |
+| Rahul        | Cloud Computing            | 2025-07-01      | Present |
++--------------+----------------------------+-----------------+---------+
+10 rows in set (0.00 sec)
+
+mysql> -- 3. Count total students in each department.
+mysql> SELECT d.department_name,
+    ->        COUNT(s.student_id) AS Total_Students
+    -> FROM Department d
+    -> INNER JOIN Student s
+    -> ON d.department_id = s.department_id
+    -> GROUP BY d.department_name;
++----------------------------------------------+----------------+
+| department_name                              | Total_Students |
++----------------------------------------------+----------------+
+| Computer Science and Engineering             |              3 |
+| Electronics and Communication Engineering    |              2 |
+| Artificial Intelligence and Machine Learning |              2 |
+| Information Technology                       |              1 |
++----------------------------------------------+----------------+
+4 rows in set (0.04 sec)
+
+mysql> -- 4. Display the total number of present students for each course.
+mysql> SELECT c.course_name,
+    ->        COUNT(a.student_id) AS Present_Students
+    -> FROM Attendance a
+    -> INNER JOIN Course c
+    -> ON a.course_id = c.course_id
+    -> WHERE a.status = 'Present'
+    -> GROUP BY c.course_name;
++----------------------------+------------------+
+| course_name                | Present_Students |
++----------------------------+------------------+
+| Database Management System |                2 |
+| Computer Networks          |                2 |
+| Cloud Computing            |                1 |
+| Artificial Intelligence    |                1 |
+| Python Programming         |                1 |
++----------------------------+------------------+
+5 rows in set (0.00 sec)
+
+mysql> -- 5. List students who were absent on '2025-07-01'.
+mysql> SELECT s.student_name,
+    ->        a.attendance_date
+    -> FROM Student s
+    -> INNER JOIN Attendance a
+    -> ON s.student_id = a.student_id
+    -> WHERE a.status = 'Absent'
+    -> AND a.attendance_date = '2025-07-01';
++--------------+-----------------+
+| student_name | attendance_date |
++--------------+-----------------+
+| Vihaan       | 2025-07-01      |
+| Kiran        | 2025-07-01      |
++--------------+-----------------+
+2 rows in set (0.00 sec)
+
+mysql> -- 6. Display faculty names along with the courses they teach.
+mysql> SELECT f.faculty_name,
+    ->        c.course_name
+    -> FROM Faculty f
+    -> INNER JOIN Course c
+    -> ON f.faculty_id = c.faculty_id;
++--------------+----------------------------+
+| faculty_name | course_name                |
++--------------+----------------------------+
+| Ravi Kumar   | Database Management System |
+| Ravi Kumar   | Python Programming         |
+| Meena        | Computer Networks          |
+| Suresh       | Artificial Intelligence    |
+| Kavitha      | Cloud Computing            |
++--------------+----------------------------+
+5 rows in set (0.00 sec)
+
+mysql> -- Level 3 (Advanced)
+mysql> --  Find the department with the highest number of students
+mysql> SELECT d.department_name,
+    ->        COUNT(s.student_id) AS Total_Students
+    -> FROM Department d
+    -> INNER JOIN Student s
+    -> ON d.department_id = s.department_id
+    -> GROUP BY d.department_name
+    -> ORDER BY Total_Students DESC
+    -> LIMIT 1;
++----------------------------------+----------------+
+| department_name                  | Total_Students |
++----------------------------------+----------------+
+| Computer Science and Engineering |              3 |
++----------------------------------+----------------+
+1 row in set (0.00 sec)
+
+mysql> -- 2. Display students who have never been absent.
+mysql> SELECT student_name
+    -> FROM Student
+    -> WHERE student_id NOT IN
+    -> (
+    -> SELECT student_id
+    -> FROM Attendance
+    -> WHERE status = 'Absent'
+    -> );
++--------------+
+| student_name |
++--------------+
+| Sownya       |
+| Ananya       |
+| Rahul        |
+| Sneha        |
+| Priya        |
++--------------+
+5 rows in set (0.00 sec)
+
+mysql> -- 3.Find the faculty who handled the maximum number of attendance records.
+mysql> SELECT f.faculty_name,
+    ->        COUNT(a.attendance_id) AS Attendance_Records
+    -> FROM Faculty f
+    -> INNER JOIN Attendance a
+    -> ON f.faculty_id = a.faculty_id
+    -> GROUP BY f.faculty_id, f.faculty_name
+    -> ORDER BY Attendance_Records DESC
+    -> LIMIT 1;
++--------------+--------------------+
+| faculty_name | Attendance_Records |
++--------------+--------------------+
+| Ravi Kumar   |                  5 |
++--------------+--------------------+
+1 row in set (0.00 sec)
+
