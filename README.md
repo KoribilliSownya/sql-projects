@@ -71,7 +71,7 @@ Queries using:
 - Proper relational database design
 - Use of primary and foreign keys
 - Data analysis using SQL queries
-- ER Diagram included
+- ER Diagram included 
 - Sample records inserted for testing
 
 ---
