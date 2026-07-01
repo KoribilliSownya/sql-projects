@@ -91,124 +91,90 @@ Through this project, the following concepts were practiced:
 Developed as part of SQL database practice and academic learning.
 
 ============================================================================================================================================
-## Face Automated Attendance Management System
-## Project Overview
 
-The Face Automated Attendance Management System is a relational database project developed using MySQL.
 
-This project is designed to manage an automated attendance system by maintaining departments, students, faculty members, courses, classrooms, and attendance records. It simulates how a face recognition-based attendance application stores and manages data efficiently using a relational database.
+YouTube Video Summarization System Using NLP
+Project Overview
 
-The database demonstrates the implementation of:
+The YouTube Video Summarization System Using NLP is a relational database project developed using MySQL.
 
-* Table creation
-* Primary and Foreign Keys
-* Data insertion
-* Relationships between multiple tables
-* SQL queries of different difficulty levels
-* Data retrieval using joins and subqueries
+This project is designed to manage YouTube video summarization by maintaining users, video details, transcripts, summaries, NLP models, and summary history. It simulates the workflow of an AI-powered video summarization system where transcripts are extracted from YouTube videos and summarized using Natural Language Processing (NLP) models.
 
----
+##The database demonstrates the implementation of:
 
-## Technologies Used
+Table creation
+Primary and Foreign Keys
+Data insertion
+Relationships between tables
+SQL queries of different difficulty levels
 
-* MySQL
-* SQL
+##Technologies Used
+MySQL
+SQL
+Database Tables
 
----
+##The project contains the following tables:
 
-## Database Tables
+User
+Video
+Transcript
+Summary
+NLP_Model
+Summary_History
 
-The project contains the following tables:
+Relationships
+------------
+One user can upload multiple videos.
+One video has one transcript.
+One transcript can generate one summary.
+One NLP model can generate multiple summaries.
+One summary can have multiple history records.
 
-1. Department
-2. Student
-3. Faculty
-4. Course
-5. Classroom
-6. Attendance
+##SQL Queries Included
 
----
-
-## Relationships
-
-* One department can have multiple students.
-* One department can have multiple faculty members.
-* One faculty member can teach multiple courses.
-* One student can have multiple attendance records.
-* One course can have multiple attendance records.
-* One classroom can contain multiple attendance records.
-
----
-
-## SQL Queries Included
-
-### Beginner Level Queries
+Beginner Level Queries
+--------------------
 
 Queries using:
+------------
+WHERE clause
+Operators
+LIKE
+ORDER BY
+COUNT()
 
-* SELECT
-* WHERE clause
-* ORDER BY
-* LIKE
-* DISTINCT
-* COUNT()
-
-### Intermediate Level Queries
-
+Intermediate Level Queries
+-------------------------
 Queries using:
+-----------
+INNER JOIN
+Aggregate Functions
+AVG()
+MAX()
+COUNT()
+GROUP BY
 
-* INNER JOIN
-* Aggregate Functions
-* COUNT()
-* AVG()
-* MAX()
-* MIN()
-* GROUP BY
-
-### Advanced Level Queries
-
+##Advanced Level Queries
+--------------------
 Queries using:
+-----------
+JOINS
+GROUP BY
+HAVING
+ORDER BY
+Subqueries
+NOT IN
 
-* JOINS
-* Subqueries
-* GROUP BY
-* HAVING
-* ORDER BY
-* Nested Queries
-
----
-
-## Features
-
-* Well-structured relational database design
-* Implementation of Primary and Foreign Keys
-* Student attendance management
-* Faculty and course management
-* Department-wise student organization
-* Classroom allocation
-* Attendance reporting using SQL queries
-* ER Diagram included
-* Sample records inserted for testing
-
----
-
-## Learning Outcomes
+Learning Outcomes
+-----------------
 
 Through this project, the following concepts were practiced:
 
-* Relational Database Design
-* Database Normalization
-* Primary and Foreign Keys
-* SQL Query Writing
-* Table Relationships
-* Aggregate Functions
-* Joins
-* Subqueries
-* ER Diagram Design
-* Data Analysis using SQL
-
-
-## Author
-
-Developed as part of SQL database practice and academic learning. This project demonstrates database design concepts for a Face Automated Attendance Management System and can be integrated with a Python-based Face Recognition application for real-time attendance management.
-
+Database Normalization
+SQL Query Writing
+Table Relationships
+Aggregate Functions
+SQL Joins
+Subqueries
+ER Diagram Design
+Relational Database Management
