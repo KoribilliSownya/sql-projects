@@ -100,70 +100,70 @@ The YouTube Video Summarization System Using NLP is a relational database projec
 
 This project is designed to manage YouTube video summarization by maintaining users, video details, transcripts, summaries, NLP models, and summary history. It simulates the workflow of an AI-powered video summarization system where transcripts are extracted from YouTube videos and summarized using Natural Language Processing (NLP) models.
 
-##The database demonstrates the implementation of:
+The database demonstrates the implementation of:
 
-Table creation
-Primary and Foreign Keys
-Data insertion
-Relationships between tables
-SQL queries of different difficulty levels
+-Table creation
+-Primary and Foreign Keys
+-Data insertion
+-Relationships between tables
+-SQL queries of different difficulty levels
 
 ##Technologies Used
 MySQL
 SQL
 Database Tables
 
-##The project contains the following tables:
+The project contains the following tables:
 
-User
-Video
-Transcript
-Summary
-NLP_Model
-Summary_History
+-User
+-Video
+-Transcript
+-Summary
+-NLP_Model
+-Summary_History
 
 Relationships
 ------------
-One user can upload multiple videos.
-One video has one transcript.
-One transcript can generate one summary.
-One NLP model can generate multiple summaries.
-One summary can have multiple history records.
+-One user can upload multiple videos.
+-One video has one transcript.
+-One transcript can generate one summary.
+-One NLP model can generate multiple summaries.
+-One summary can have multiple history records.
 
-##SQL Queries Included
+SQL Queries Included
 
 Beginner Level Queries
 --------------------
 
 Queries using:
 ------------
-WHERE clause
-Operators
-LIKE
-ORDER BY
-COUNT()
+-WHERE clause
+-Operators
+-LIKE
+-ORDER BY
+-COUNT()
 
 Intermediate Level Queries
 -------------------------
 Queries using:
 -----------
-INNER JOIN
-Aggregate Functions
-AVG()
-MAX()
-COUNT()
-GROUP BY
+-INNER JOIN
+-Aggregate Functions
+-AVG()
+-MAX()
+-COUNT()
+-GROUP BY
 
-##Advanced Level Queries
---------------------
+Advanced Level Queries
+---
 Queries using:
 -----------
-JOINS
-GROUP BY
-HAVING
-ORDER BY
-Subqueries
-NOT IN
+-JOINS
+-GROUP BY
+-HAVING
+-ORDER BY
+-Subqueries
+-NOT IN
 
 Learning Outcomes
 -----------------
